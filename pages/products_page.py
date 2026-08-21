@@ -30,6 +30,15 @@ class ProductsPage:
         self.product_names = page.locator(
             ".features_items .productinfo p"
         )
+        self.added_to_cart_message = page.get_by_text(
+            "Your product has been added to cart.",
+            exact=True
+        )
+
+        self.view_cart_link = page.get_by_role(
+            "link",
+            name="View Cart"
+        )
 
     def verify_products_page_is_open(self):
         expect(self.all_products_heading).to_be_visible()
@@ -46,3 +55,22 @@ class ProductsPage:
         )
 
         expect(matching_product.first).to_be_visible()
+
+    def add_product_to_cart(self, product_name: str):
+        product_card = self.page.locator(
+            ".productinfo"
+        ).filter(
+            has_text=product_name
+        ).first
+
+        add_to_cart_button = product_card.locator(
+            ".add-to-cart"
+        )
+
+        expect(add_to_cart_button).to_be_visible()
+        add_to_cart_button.click()
+
+        expect(self.added_to_cart_message).to_be_visible()
+
+    def go_to_cart_from_modal(self):
+        self.view_cart_link.click()

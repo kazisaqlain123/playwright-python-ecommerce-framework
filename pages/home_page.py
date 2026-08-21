@@ -24,7 +24,10 @@ class HomePage:
             "link",
             name="Cart"
         )
-
+        self.contact_us_link = page.get_by_role(
+            "link",
+            name="Contact us"
+        )
         self.cookie_consent_button = page.locator(
             ".fc-cta-consent"
         )
@@ -52,3 +55,6 @@ class HomePage:
 
     def go_to_products_page(self):
         self.products_link.click()
+
+    def go_to_contact_us_page(self):
+        self.contact_us_link.click()

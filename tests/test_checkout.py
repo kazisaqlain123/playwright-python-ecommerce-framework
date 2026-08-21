@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 from playwright.sync_api import Page
 
@@ -18,7 +20,8 @@ payment_data = read_json("payment.json")
 @pytest.mark.e2e
 def test_complete_checkout(
     page: Page,
-    registered_user: dict[str, str]
+    registered_user: dict[str, str],
+    tmp_path: Path
 ):
     product_name = "Blue Top"
 
@@ -58,9 +61,11 @@ def test_complete_checkout(
     checkout_page.verify_delivery_and_billing_addresses(
         registered_user
     )
+
     checkout_page.add_order_comment(
         "Please process this automation test order."
     )
+
     checkout_page.place_order()
 
     payment_page.verify_payment_page_is_open()
@@ -68,3 +73,12 @@ def test_complete_checkout(
     payment_page.pay_and_confirm_order()
 
     order_confirmation_page.verify_order_was_placed()
+
+    invoice_path = order_confirmation_page.download_invoice(
+        tmp_path
+    )
+
+    assert invoice_path.exists()
+    assert invoice_path.is_file()
+    assert invoice_path.stat().st_size > 0
+    assert invoice_path.suffix == ".txt"

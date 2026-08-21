@@ -1,6 +1,6 @@
 # Playwright Python E-Commerce Test Automation Framework
 
-A portfolio test automation framework built with Python, Playwright and Pytest. It automates essential workflows on the Automation Exercise e-commerce practice website.
+A portfolio-ready test automation framework built with Python, Playwright, and Pytest. It automates realistic UI and API-assisted workflows on the Automation Exercise e-commerce practice website.
 
 ## Application Under Test
 
@@ -11,28 +11,44 @@ A portfolio test automation framework built with Python, Playwright and Pytest. 
 - Python
 - Playwright
 - Pytest
+- Requests
 - Page Object Model
-- JSON test data
-- CSV test data
+- JSON and CSV test data
 - Git and GitHub
 
 ## Automated Test Scenarios
 
-- Verify the home page opens successfully
+- Verify that the home page opens successfully
 - Verify login with invalid credentials
 - Search for multiple products using CSV data
 - Add a searched product to the shopping cart
-- Verify the selected product appears in the cart
+- Register a new user and delete the account after verification
+- Create test accounts through the API
+- Log in with valid credentials and log out
+- Complete checkout with delivery and billing address validation
+- Submit payment details and verify order confirmation
+- Download and verify the generated invoice
+- Submit the Contact Us form with a file attachment and confirmation dialog
+- Verify that two browser contexts maintain isolated user sessions
+
+The current suite collects 11 tests in Chromium. Product search is parameterized with three CSV data rows.
 
 ## Framework Features
 
 - Page Object Model architecture
 - Reusable Pytest fixtures
 - Central browser-context configuration
-- JSON-based login data
+- API-assisted test setup and cleanup
+- Unique email generation for independent test execution
+- Guaranteed account cleanup using fixture teardown
+- JSON-based registration and payment data
 - CSV-based product-search data
 - Pytest parameterization
-- Smoke and regression markers
+- Smoke, regression, and end-to-end markers
+- File upload and JavaScript dialog handling
+- Network-response validation
+- Download handling and invoice verification
+- Multiple isolated browser contexts
 - Optional cookie-consent handling
 - Stable Playwright locators and assertions
 
@@ -41,19 +57,34 @@ A portfolio test automation framework built with Python, Playwright and Pytest. 
 ```text
 playwright-python-ecommerce-framework/
 ├── pages/
+│   ├── account_page.py
+│   ├── cart_page.py
+│   ├── checkout_page.py
+│   ├── contact_page.py
 │   ├── home_page.py
 │   ├── login_page.py
+│   ├── order_confirmation_page.py
+│   ├── payment_page.py
 │   ├── products_page.py
-│   └── cart_page.py
+│   └── signup_page.py
 ├── tests/
+│   ├── test_browser_contexts.py
+│   ├── test_cart.py
+│   ├── test_checkout.py
+│   ├── test_contact.py
 │   ├── test_home_page.py
 │   ├── test_login.py
 │   ├── test_products.py
-│   └── test_cart.py
+│   ├── test_registration.py
+│   └── test_valid_login.py
 ├── test_data/
-│   ├── users.json
-│   └── products.csv
+│   ├── contact_attachment.txt
+│   ├── payment.json
+│   ├── products.csv
+│   └── users.json
 ├── utils/
+│   ├── account_api.py
+│   ├── data_generator.py
 │   └── data_reader.py
 ├── conftest.py
 ├── pytest.ini
@@ -77,7 +108,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Install the dependencies:
+Install the dependencies and Playwright browsers:
 
 ```bash
 python -m pip install -r requirements.txt
@@ -110,14 +141,49 @@ Run only regression tests:
 python -m pytest -m regression
 ```
 
+Run only end-to-end tests:
+
+```bash
+python -m pytest -m e2e
+```
+
 Run a specific test file:
 
 ```bash
-python -m pytest tests/test_cart.py --headed
+python -m pytest tests/test_checkout.py --headed -v --tb=short
 ```
+
+## Test Data and Cleanup
+
+Registration and payment details are stored in JSON files, while product-search inputs are stored in CSV. Unique email addresses are generated during execution to prevent conflicts between repeated runs.
+
+Tests that require an existing account create it through the Automation Exercise API. Pytest fixture teardown deletes temporary accounts even when a UI assertion fails.
+
+All payment values are fictional and are used only on the practice website.
 
 ## Current Status
 
-Stage 1 is complete with six passing Chromium tests.
+Stage 2 is complete with 11 passing Chromium tests.
 
-Future stages will add registration, checkout, file upload, invoice download, reporting, screenshots, videos, traces, cross-browser execution and GitHub Actions.
+Completed capabilities include registration, valid and invalid authentication, product search, cart validation, checkout, payment, invoice download, file upload, dialog handling, API-assisted setup and cleanup, and isolated browser contexts.
+
+## Known Limitation
+
+The public practice website can behave differently in headless execution. For the Contact Us workflow, the test verifies the successful POST response and returned confirmation message because the visible success container can remain empty even when the server returns HTTP 200 with the expected content.
+
+## Roadmap
+
+### Stage 3: Reporting and Failure Evidence
+
+- Self-contained HTML reports
+- Screenshots on failure
+- Videos retained on failure
+- Playwright traces retained on failure
+- Organized test artifacts
+
+### Stage 4: Continuous Integration
+
+- GitHub Actions execution after pushes and pull requests
+- Chromium, Firefox, and WebKit coverage
+- Uploaded reports and failure artifacts
+- GitHub Actions status badge

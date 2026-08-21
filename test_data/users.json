@@ -2,5 +2,23 @@
   "invalid_user": {
     "email": "invalid_user@example.com",
     "password": "IncorrectPassword123"
+  },
+  "registration_user": {
+    "name": "QA Automation User",
+    "password": "Test@12345",
+    "title": "Mr",
+    "day": "10",
+    "month": "5",
+    "year": "1995",
+    "first_name": "QA",
+    "last_name": "Automation",
+    "company": "Test Company",
+    "address": "10 Test Street",
+    "address2": "Suite 2",
+    "country": "India",
+    "state": "Maharashtra",
+    "city": "Mumbai",
+    "zipcode": "400001",
+    "mobile_number": "9999999999"
   }
 }

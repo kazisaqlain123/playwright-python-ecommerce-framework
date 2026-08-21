@@ -23,6 +23,10 @@ class AccountPage:
             '[data-qa="account-deleted"]'
         )
 
+        self.logout_link = page.locator(
+            'a[href="/logout"]'
+        )
+
     def verify_account_was_created(self):
         expect(self.account_created_heading).to_be_visible()
 
@@ -37,8 +41,13 @@ class AccountPage:
 
         expect(logged_in_message).to_be_visible()
 
+    def logout(self):
+        expect(self.logout_link).to_be_visible()
+        self.logout_link.click()
+
     def delete_account(self):
         self.delete_account_link.click()
 
     def verify_account_was_deleted(self):
         expect(self.account_deleted_heading).to_be_visible()
+

@@ -1,3 +1,6 @@
+from utils.account_api import create_account, delete_account
+from utils.data_generator import generate_unique_email
+from utils.data_reader import read_json
 import pytest
 
 
@@ -11,3 +14,18 @@ def browser_context_args(browser_context_args):
             "height": 900
         }
     }
+@pytest.fixture
+def registered_user() -> dict[str, str]:
+    user = read_json("users.json")["registration_user"].copy()
+
+    user["email"] = generate_unique_email()
+
+    create_account(user)
+
+    try:
+        yield user
+    finally:
+        delete_account(
+            email=user["email"],
+            password=user["password"]
+        )

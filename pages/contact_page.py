@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-
+from urllib.parse import urlparse
 from playwright.sync_api import Page, expect
 
 
@@ -72,6 +72,37 @@ class ContactPage:
             "dialog",
             lambda dialog: dialog.accept()
         )
+
+        def is_contact_form_post(request) -> bool:
+            request_path = urlparse(
+                request.url
+            ).path.rstrip("/")
+
+            return (
+                    request.method == "POST"
+                    and request_path == "/contact_us"
+            )
+
+        with self.page.expect_request_finished(
+                predicate=is_contact_form_post,
+                timeout=60000
+        ) as request_info:
+            self.submit_button.click()
+
+        request = request_info.value
+        response = request.response()
+
+        assert response is not None, (
+            "The Contact Us request finished without "
+            "receiving a response."
+        )
+
+        assert response.ok, (
+            f"Contact form request failed with "
+            f"HTTP status {response.status}"
+        )
+
+        return response.text()
 
         with self.page.expect_response(
                 lambda response: (

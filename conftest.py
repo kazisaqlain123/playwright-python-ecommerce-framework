@@ -1,10 +1,13 @@
-import pytest
 import re
 
+import pytest
 from playwright.sync_api import BrowserContext
+from pytest_metadata.plugin import metadata_key
+
 from utils.account_api import create_account, delete_account
 from utils.data_generator import generate_unique_email
 from utils.data_reader import read_json
+
 
 GOOGLE_AD_URL = re.compile(
     r"https?://[^/]*(?:"
@@ -13,6 +16,25 @@ GOOGLE_AD_URL = re.compile(
     r"googleadservices\.com"
     r")/.*"
 )
+
+
+def pytest_configure(config):
+    metadata = config.stash[metadata_key]
+
+    metadata["Project"] = (
+        "Playwright Python E-Commerce Framework"
+    )
+    metadata["Application"] = "Automation Exercise"
+
+    metadata["Test Stage"] = (
+        "Stage 3 - Reporting and Artifacts"
+    )
+
+
+def pytest_html_report_title(report):
+    report.title = (
+        "Playwright E-Commerce Test Automation Report"
+    )
 
 
 @pytest.fixture(autouse=True)
@@ -24,11 +46,11 @@ def block_third_party_ads(
         lambda route: route.abort()
     )
 
+
 @pytest.fixture(scope="session")
 def browser_context_args(browser_context_args):
     return {
         **browser_context_args,
-        "base_url": "https://www.automationexercise.com",
         "viewport": {
             "width": 1440,
             "height": 900
@@ -53,6 +75,8 @@ def registered_user() -> dict[str, str]:
             email=user["email"],
             password=user["password"]
         )
+
+
 @pytest.fixture
 def registered_users() -> list[dict[str, str]]:
     users = []
@@ -66,12 +90,10 @@ def registered_users() -> list[dict[str, str]]:
             user["name"] = (
                 f"Context User {user_number}"
             )
-
             user["first_name"] = "Context"
             user["last_name"] = (
                 f"User {user_number}"
             )
-
             user["email"] = generate_unique_email()
 
             create_account(user)

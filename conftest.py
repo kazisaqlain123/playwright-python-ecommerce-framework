@@ -2,7 +2,9 @@ import re
 
 import pytest
 from playwright.sync_api import BrowserContext
+from pytest_html import extras
 from pytest_metadata.plugin import metadata_key
+from pytest_playwright.pytest_playwright import CreateContextCallback
 
 from utils.account_api import create_account, delete_account
 from utils.data_generator import generate_unique_email
@@ -37,14 +39,18 @@ def pytest_html_report_title(report):
     )
 
 
-@pytest.fixture(autouse=True)
-def block_third_party_ads(
-    context: BrowserContext
-) -> None:
+@pytest.fixture
+def context(
+    new_context: CreateContextCallback
+) -> BrowserContext:
+    context = new_context()
+
     context.route(
         GOOGLE_AD_URL,
         lambda route: route.abort()
     )
+
+    return context
 
 
 @pytest.fixture(scope="session")

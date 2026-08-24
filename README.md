@@ -94,8 +94,8 @@ playwright-python-ecommerce-framework/
 │   ├── account_api.py
 │   ├── data_generator.py
 │   └── data_reader.py
-├── reports                 # Generated HTML report, ignored by Git
-├── test-results           # Generated failure evidence, ignored by Git
+├── reports/                # Generated HTML report, ignored by Git
+├── test-results/         # Generated failure evidence, ignored by Git
 ├── conftest.py
 ├── pytest.ini
 ├── requirements.txt

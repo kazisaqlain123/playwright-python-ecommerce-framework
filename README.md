@@ -15,6 +15,7 @@ A portfolio-ready test automation framework built with Python, Playwright, and P
 - Page Object Model
 - JSON and CSV test data
 - Git and GitHub
+- Pytest HTML and Pytest Metadata
 
 ## Automated Test Scenarios
 
@@ -51,6 +52,13 @@ The current suite collects 11 tests in Chromium. Product search is parameterized
 - Multiple isolated browser contexts
 - Optional cookie-consent handling
 - Stable Playwright locators and assertions
+- Automatic self-contained HTML reporting
+- Custom report title and environment metadata
+- Screenshots captured on failure
+- Videos and Playwright traces retained on failure
+- Failure evidence for multiple managed browser contexts
+- Third-party advertisement blocking for stable execution
+- Controlled retry for delayed product-search responses
 
 ## Project Structure
 
@@ -86,6 +94,8 @@ playwright-python-ecommerce-framework/
 │   ├── account_api.py
 │   ├── data_generator.py
 │   └── data_reader.py
+├── reports/                # Generated HTML report, ignored by Git
+├── test-results/         # Generated failure evidence, ignored by Git
 ├── conftest.py
 ├── pytest.ini
 ├── requirements.txt
@@ -152,7 +162,35 @@ Run a specific test file:
 ```bash
 python -m pytest tests/test_checkout.py --headed -v --tb=short
 ```
+## Reports and Failure Evidence
 
+Every test execution automatically generates a self-contained HTML report:
+
+```text
+reports/report.html
+```
+
+Open the report on macOS:
+
+```bash
+open reports/report.html
+```
+
+The report contains project details, application details, the base URL, environment information, test results, and execution durations.
+
+When a test fails, the framework automatically saves evidence under `test-results/`:
+
+- Screenshot at the point of failure
+- Browser video
+- Playwright trace
+
+Open a saved trace using:
+
+```bash
+python -m playwright show-trace path/to/trace.zip
+```
+
+The `reports/` and `test-results/` directories are generated during execution and excluded from Git.
 ## Test Data and Cleanup
 
 Registration and payment details are stored in JSON files, while product-search inputs are stored in CSV. Unique email addresses are generated during execution to prevent conflicts between repeated runs.
@@ -163,9 +201,11 @@ All payment values are fictional and are used only on the practice website.
 
 ## Current Status
 
-Stage 2 is complete with 11 passing Chromium tests.
+Stage 3 is complete with 11 passing Chromium tests.
 
-Completed capabilities include registration, valid and invalid authentication, product search, cart validation, checkout, payment, invoice download, file upload, dialog handling, API-assisted setup and cleanup, and isolated browser contexts.
+The framework includes advanced e-commerce workflows, API-assisted test setup and cleanup, isolated managed browser contexts, automatic HTML reporting, custom report metadata, screenshots on failure, retained videos, and Playwright traces.
+
+The complete suite has been verified successfully with reporting and failure-evidence settings enabled.
 
 ## Known Limitation
 
@@ -173,17 +213,9 @@ The public practice website can behave differently in headless execution. For th
 
 ## Roadmap
 
-### Stage 3: Reporting and Failure Evidence
-
-- Self-contained HTML reports
-- Screenshots on failure
-- Videos retained on failure
-- Playwright traces retained on failure
-- Organized test artifacts
-
 ### Stage 4: Continuous Integration
 
 - GitHub Actions execution after pushes and pull requests
 - Chromium, Firefox, and WebKit coverage
-- Uploaded reports and failure artifacts
+- Uploaded HTML reports and failure artifacts
 - GitHub Actions status badge

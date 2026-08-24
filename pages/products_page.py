@@ -1,4 +1,8 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import (
+    Page,
+    TimeoutError as PlaywrightTimeoutError,
+    expect
+)
 
 
 class ProductsPage:
@@ -46,6 +50,19 @@ class ProductsPage:
     def search_for_product(self, product_name: str):
         self.search_input.fill(product_name)
         self.search_button.click()
+
+        try:
+            self.searched_products_heading.wait_for(
+                state="visible",
+                timeout=5000
+            )
+        except PlaywrightTimeoutError:
+            self.search_button.click()
+
+            self.searched_products_heading.wait_for(
+                state="visible",
+                timeout=10000
+            )
 
     def verify_product_is_displayed(self, product_name: str):
         expect(self.searched_products_heading).to_be_visible()

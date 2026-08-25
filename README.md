@@ -1,5 +1,7 @@
 # Playwright Python E-Commerce Test Automation Framework
 
+[![Playwright Tests](https://github.com/kazisaqlain123/playwright-python-ecommerce-framework/actions/workflows/playwright-tests.yml/badge.svg)](https://github.com/kazisaqlain123/playwright-python-ecommerce-framework/actions/workflows/playwright-tests.yml)
+
 A portfolio-ready test automation framework built with Python, Playwright, and Pytest. It automates realistic UI and API-assisted workflows on the Automation Exercise e-commerce practice website.
 
 ## Application Under Test
@@ -16,6 +18,7 @@ A portfolio-ready test automation framework built with Python, Playwright, and P
 - JSON and CSV test data
 - Git and GitHub
 - Pytest HTML and Pytest Metadata
+- GitHub Actions
 
 ## Automated Test Scenarios
 
@@ -32,7 +35,7 @@ A portfolio-ready test automation framework built with Python, Playwright, and P
 - Submit the Contact Us form with a file attachment and confirmation dialog
 - Verify that two browser contexts maintain isolated user sessions
 
-The current suite collects 11 tests in Chromium. Product search is parameterized with three CSV data rows.
+The suite collects 11 tests. GitHub Actions executes the framework across Chromium, Firefox, and WebKit. Product search is parameterized with three CSV data rows.
 
 ## Framework Features
 
@@ -64,6 +67,9 @@ The current suite collects 11 tests in Chromium. Product search is parameterized
 
 ```text
 playwright-python-ecommerce-framework/
+├── .github/
+│   └── workflows/
+│       └── playwright-tests.yml
 ├── pages/
 │   ├── account_page.py
 │   ├── cart_page.py
@@ -201,21 +207,35 @@ All payment values are fictional and are used only on the practice website.
 
 ## Current Status
 
-Stage 3 is complete with 11 passing Chromium tests.
+Stage 4 is complete with automated cross-browser execution through GitHub Actions.
 
-The framework includes advanced e-commerce workflows, API-assisted test setup and cleanup, isolated managed browser contexts, automatic HTML reporting, custom report metadata, screenshots on failure, retained videos, and Playwright traces.
+The CI pipeline runs the test suite on Chromium, Firefox, and WebKit for pushes and pull requests targeting the `main` branch. All three browser jobs have completed successfully.
 
-The complete suite has been verified successfully with reporting and failure-evidence settings enabled.
+The framework now includes advanced e-commerce workflows, API-assisted setup and cleanup, isolated browser contexts, HTML reporting, custom metadata, failure screenshots, retained videos, Playwright traces, cross-browser CI, and uploaded test artifacts.
 
-## Known Limitation
+## Continuous Integration
 
-The public practice website can behave differently in headless execution. For the Contact Us workflow, the test verifies the successful POST response and returned confirmation message because the visible success container can remain empty even when the server returns HTTP 200 with the expected content.
+The GitHub Actions workflow:
 
-## Roadmap
+- Runs automatically for pushes and pull requests targeting `main`
+- Uses Ubuntu and Python 3.13
+- Executes Chromium, Firefox, and WebKit as separate matrix jobs
+- Installs each Playwright browser with its required system dependencies
+- Uploads a self-contained HTML report for every browser
+- Uploads screenshots, videos, and traces when a job fails
+- Retains uploaded artifacts for 14 days
+- Prevents one browser failure from cancelling the remaining browser jobs
 
-### Stage 4: Continuous Integration
+The workflow is located at:
 
-- GitHub Actions execution after pushes and pull requests
-- Chromium, Firefox, and WebKit coverage
-- Uploaded HTML reports and failure artifacts
-- GitHub Actions status badge
+```text
+.github/workflows/playwright-tests.yml
+```
+
+## Known Limitations
+
+The application under test is a public third-party practice website, so temporary rate limiting or bot-verification pages can occasionally affect GitHub-hosted runners.
+
+The Contact Us submission runs locally in Chromium but is skipped in GitHub Actions because its POST request is unreliable from hosted runners.
+
+WebKit validates the complete checkout workflow through order confirmation, but invoice download verification is limited to Chromium and Firefox because the practice website does not reliably trigger a WebKit download event.

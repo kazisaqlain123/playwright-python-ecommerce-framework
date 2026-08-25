@@ -1,10 +1,12 @@
+import os
 from pathlib import Path
-from utils.data_generator import generate_unique_email
+
 import pytest
 from playwright.sync_api import Page
 
 from pages.contact_page import ContactPage
 from pages.home_page import HomePage
+from utils.data_generator import generate_unique_email
 
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -16,6 +18,14 @@ ATTACHMENT_PATH = (
 )
 
 
+@pytest.mark.skipif(
+    os.getenv("GITHUB_ACTIONS") == "true",
+    reason=(
+        "Automation Exercise Contact Us POST is "
+        "unreliable from GitHub Actions runners."
+    )
+)
+@pytest.mark.only_browser("chromium")
 @pytest.mark.regression
 def test_submit_contact_form_with_attachment(
     page: Page

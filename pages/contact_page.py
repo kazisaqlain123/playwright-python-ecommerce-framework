@@ -93,6 +93,7 @@ class ContactPage:
 
         return response.text()
 
+
     def verify_submission_response(
             self,
             response_body: str

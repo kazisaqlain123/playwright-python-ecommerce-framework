@@ -29,7 +29,7 @@ def pytest_configure(config):
     metadata["Application"] = "Automation Exercise"
 
     metadata["Test Stage"] = (
-        "Stage 3 - Reporting and Artifacts"
+        "Stage 4 - Continuous Integration"
     )
 
 

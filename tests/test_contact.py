@@ -15,11 +15,12 @@ ATTACHMENT_PATH = (
     / "contact_attachment.txt"
 )
 
-
+@pytest.mark.only_browser("chromium")
 @pytest.mark.regression
 def test_submit_contact_form_with_attachment(
     page: Page
 ):
+
     home_page = HomePage(page)
     contact_page = ContactPage(page)
 

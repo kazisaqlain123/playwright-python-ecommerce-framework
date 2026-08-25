@@ -230,16 +230,12 @@ The workflow is located at:
 
 ```text
 .github/workflows/playwright-tests.yml
+```
 
-## Known Limitation
+## Known Limitations
 
-The public practice website can behave differently in headless execution. For the Contact Us workflow, the test verifies the successful POST response and returned confirmation message because the visible success container can remain empty even when the server returns HTTP 200 with the expected content.
+The application under test is a public third-party practice website, so temporary rate limiting or bot-verification pages can occasionally affect GitHub-hosted runners.
 
-## Roadmap
+The Contact Us submission runs locally in Chromium but is skipped in GitHub Actions because its POST request is unreliable from hosted runners.
 
-### Stage 4: Continuous Integration
-
-- GitHub Actions execution after pushes and pull requests
-- Chromium, Firefox, and WebKit coverage
-- Uploaded HTML reports and failure artifacts
-- GitHub Actions status badge
+WebKit validates the complete checkout workflow through order confirmation, but invoice download verification is limited to Chromium and Firefox because the practice website does not reliably trigger a WebKit download event.
